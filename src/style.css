@@ -1,0 +1,4 @@
+@import url('./assets/css/colors.css');
+.gap-2 {
+  gap:0.5rem !important
+}
