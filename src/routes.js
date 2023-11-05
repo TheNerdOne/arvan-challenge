@@ -5,9 +5,9 @@ import Layout from './layout/index.vue'
 
 const routes = [
     { path: '/auth', component: Auth },
-    { path: '/articles', meta: { layout: Layout }, component: Articles },
-    { path: '/articles/create', meta: { layout: Layout }, component: ArticleForm },
-    { path: '/articles/edit/:slug', meta: { layout: Layout }, component: ArticleForm },
+    { path: '/articles', name:"articles", meta: { layout: Layout }, component: Articles },
+    { path: '/articles/create', name:"createArticle", meta: { layout: Layout }, component: ArticleForm },
+    { path: '/articles/edit/:slug', name:"editArticle", meta: { layout: Layout }, component: ArticleForm },
 ]
 
 export default routes

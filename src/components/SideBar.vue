@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-shrink-0 p-3 bg-light"
-      style="width: 280px"
-    >
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light sideBar">
       <div
         href="/"
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
@@ -13,14 +10,21 @@
       <hr />
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="#" class="nav-link active" aria-current="page">
+          <RouterLink
+            :to="{ name: 'articles' }"
+            :class="`nav-link ${articlesRoute ? 'active' : ''}`"
+            aria-current="page"
+          >
             All Articles
-          </a>
+          </RouterLink>
         </li>
         <li>
-          <a href="#" class="nav-link link-dark">
+          <RouterLink
+            :to="{ name: 'createArticle' }"
+            :class="`nav-link link-dark ${!articlesRoute ? 'active' : ''}`"
+          >
             New Article
-          </a>
+          </RouterLink>
         </li>
       </ul>
     </div>
@@ -30,6 +34,19 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { computed } from "vue";
+import { RouterLink, useRoute } from "vue-router";
 
-<style lang="scss" scoped></style>
+const route = useRoute();
+const articlesRoute = computed(() => {
+  return route.name === "articles";
+});
+</script>
+
+<style lang="scss" scoped>
+.sideBar {
+  width: 280px;
+  height: 100vh;
+}
+</style>
