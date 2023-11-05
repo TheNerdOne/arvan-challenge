@@ -14,7 +14,7 @@ import TopBar from "../components/TopBar.vue";
 </script>
 
 <style lang="scss" scoped>
-::v-deep .content-slot > div {
+:deep .content-slot > div {
   display: flex;
 }
 </style>
