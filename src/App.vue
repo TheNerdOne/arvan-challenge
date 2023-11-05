@@ -1,9 +1,10 @@
 <script setup>
-import { RouterView } from "vue-router";
-import Layout from './layout/index.vue'
+import { RouterView, useRoute } from "vue-router";
+const route = useRoute();
 </script>
+
 <template>
-  <Layout>
+  <component :is="route.meta.layout || 'div'">
     <RouterView />
-  </Layout>
+  </component>
 </template>
