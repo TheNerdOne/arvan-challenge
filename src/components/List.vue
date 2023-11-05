@@ -1,5 +1,4 @@
 <template>
-    <template>
   <div class="d-flex flex-column align-items-center justify-content-between">
     <table class="table">
       <thead>
@@ -27,11 +26,24 @@
                     type="button"
                     data-toggle="dropdown"
                     aria-expanded="false"
-                  >...
+                  >
+                    ...
                   </button>
                   <div class="dropdown-menu">
-                    <div class="dropdown-item" role="button" @click="editArticle(item.id)">Edit</div>
-                    <div class="dropdown-item" role="button" @click="deleteArticle(item.id)">Delete</div>
+                    <div
+                      class="dropdown-item"
+                      role="button"
+                      @click="editArticle(item.id)"
+                    >
+                      Edit
+                    </div>
+                    <div
+                      class="dropdown-item"
+                      role="button"
+                      @click="deleteArticle(item.id)"
+                    >
+                      Delete
+                    </div>
                   </div>
                 </div>
               </div>
@@ -41,31 +53,25 @@
       </tbody>
     </table>
     <div class="w-100 d-flex align-items-center justify-content-center">
-        <Pagination/>
+      <Pagination />
     </div>
   </div>
 </template>
 
 <script setup>
-import Pagination from './Pagination.vue'
-const props = defineProps(["columns", "items"]);
-const editArticle = (articleId) => {
-    console.log(articleId)
-}
-const deleteArticle = (articleId) => {
-    console.log(articleId)
-}
-</script>
+    import Pagination from "./Pagination.vue";
+    const props = defineProps(["columns", "items"]);
+    const editArticle = (articleId) => {
+      console.log(articleId);
+    };
+    const deleteArticle = (articleId) => {
+      console.log(articleId);
+    };
+  </script>
 
-<style lang="scss" scoped>
-.btn-info{
-    background-color: var(--arv-info) !important;
-    border: none !important;
-}</style>
-
-</template>
-
-<script setup>
-</script>
-
-<style lang="scss" scoped></style>
+  <style lang="scss" scoped>
+    .btn-info {
+      background-color: var(--arv-info) !important;
+      border: none !important;
+    }
+  </style>
