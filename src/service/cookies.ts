@@ -1,12 +1,12 @@
 interface ICookie {
 	cname:string,
-	cvalue?:string,
-	exdays?:number
+	cvalue:string,
+	exdays:number
 }
 export class cookieFuns  {
 	setCookie({cname, cvalue, exdays}:ICookie) {
 		const d = new Date();
-		if(exdays) {
+		if(exdays >= 0) {
 		d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
 		let expires = "expires="+ d.toUTCString();
 		window.document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"
