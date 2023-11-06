@@ -29,15 +29,15 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { cookieFuns } from "../service/cookies";
 import { useUsersStore } from "../stores/users";
+import JWT from "../service/JWT";
+
 const router = useRouter();
-const cookiesFunctions = new cookieFuns();
 const userStore = useUsersStore();
-const token = cookiesFunctions.getCookie("token");
+const token = JWT.getToken();
 const handleLogOutClick = async () => {
+  JWT.deleteToken(token);
   await userStore.logOut();
-  cookiesFunctions.setCookie({ cname: "token", cvalue: token, exdays: 0 });
   router.push({ name: "auth" });
 };
 </script>
