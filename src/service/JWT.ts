@@ -22,7 +22,7 @@ export const setRefreshToken = (token:string) => {
 }
 
 export const deleteToken = (token:string) => {
-	cookie.setCookie({cname:TOKEN_KEY,cvalue:token,exdays:0})
+	cookie.setCookie({cname:TOKEN_KEY,cvalue:token,exdays:-1})
 	// window.localStorage.removeItem(TOKEN_KEY)
 }
 export const deleteRefreshToken = () => {

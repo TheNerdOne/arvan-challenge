@@ -15,7 +15,7 @@ import Loading from "./common/Loading.vue";
 const pageData = ref({});
 const articlesStore = useArticlesStore();
 onMounted(async () => {
-  !articlesStore.articlesData.articles && await articlesStore.fetchArticlesData();
+  !articlesStore.articlesData.articles.length && await articlesStore.fetchArticlesData();
   pageData.value = articlesStore.articlesData
 });
 </script>
