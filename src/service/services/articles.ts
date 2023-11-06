@@ -4,7 +4,10 @@ import { AxiosResponse } from "axios";
 
 const articlesDataProvider = {
   async getAllArticles():Promise<AxiosResponse> {
-    return await axiosApiWrapper["get"](ARTICLES.list,{});
+    return await axiosApiWrapper["get"](ARTICLES,{});
   },
+  async deleteArticle(payload:string):Promise<AxiosResponse> {
+    return await axiosApiWrapper["delete"](ARTICLES,payload,{})
+  }
 };
 export default articlesDataProvider;
