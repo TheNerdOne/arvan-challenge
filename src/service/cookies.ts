@@ -1,18 +1,18 @@
 interface ICookie {
 	cname:string,
-	cvalue:string,
-	exdays:number
+	cvalue?:string,
+	exdays?:number
 }
 export class cookieFuns  {
 	setCookie({cname, cvalue, exdays}:ICookie) {
 		const d = new Date();
-		if(exdays >= 0) {
-		d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-		let expires = "expires="+ d.toUTCString();
-		window.document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"
-		}
+		if (exdays && exdays >= 0) {
+      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+      let expires = "expires=" + d.toUTCString();
+      window.document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
 	}
-	getCookie(cname:ICookie) {
+	getCookie({cname}:ICookie) {
 		let name = cname + "=";
 		let ca = window.document.cookie.split(';');
 		for(let i = 0; i < ca.length; i++) {

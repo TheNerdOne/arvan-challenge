@@ -7,8 +7,8 @@ import './style.css'
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axiosApiWrapper from './service/axiosApiWrapper'
-import { cookieFuns } from './service/cookies'
-const CookiesFunctions = new cookieFuns()
+import { useUsersStore } from './stores/users'
+import JWT from './service/JWT'
 
 axiosApiWrapper.init()
 
@@ -24,10 +24,12 @@ app.use(router)
 app.use(pinia)
 
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = CookiesFunctions.getCookie("token")
+    const userStore = useUsersStore();
+    const isAuthenticated = JWT.getToken()
+    if (!userStore.user.token && isAuthenticated) userStore.getUser()
     if (to.name !== 'auth' && !isAuthenticated) next({ name: 'auth' })
     else if (to.name === 'auth' && isAuthenticated) next({ name: 'articles' })
     else next()
-}) 
+})
 
 app.mount('#app')

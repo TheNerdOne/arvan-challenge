@@ -11,7 +11,7 @@ interface IRegister {
   password: string;
 }
 const authDataProvider = {
-  async register(payload:IRegister) {
+  async register(payload:IRegister): Promise<AxiosResponse> {
     return await axiosApiWrapper["post"](
       AUTH.register,
       {user:payload}
@@ -20,5 +20,8 @@ const authDataProvider = {
   async login(payload: ILogin): Promise<AxiosResponse> {
     return await axiosApiWrapper["post"](AUTH.login, {user:payload})
   },
+  async currentUser(): Promise<AxiosResponse> {
+    return await axiosApiWrapper['get'](AUTH.currentUser,{})
+  }
 };
 export default authDataProvider;

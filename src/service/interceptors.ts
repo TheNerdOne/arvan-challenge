@@ -30,7 +30,7 @@ export const interceptorFunctions = {
     onFullFilled: async (config: InternalAxiosRequestConfig) => {
       if ((await JWT.getToken()) && config.headers) {
         axiosApiWrapper.addAuthorizationHeader();
-        await (config.headers.Authorization = `Bearer ${JWT.getToken()}`);
+        await (config.headers.Authorization = `Token ${JWT.getToken()}`);
       } else {
         axiosApiWrapper.removeAuthorizationHeader();
       }

@@ -1,6 +1,7 @@
 const Auth = {
 	register : '/users',
-	login:'/users/Login'
+	login:'/users/Login',
+	currentUser:'user'
 }
 
 export default Auth
