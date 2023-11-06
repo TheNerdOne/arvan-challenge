@@ -70,8 +70,8 @@ const axiosApiWrapper = {
     return axios.put(`${resource}`, params, config);
   },
 
-  delete(resource: string, params: object): Promise<AxiosResponse> {
-    return axios.delete(resource, params);
+  delete(resource: string,slug:string, params: object): Promise<AxiosResponse> {
+    return axios.delete(`${resource}/${slug}`, params);
   },
 };
 
