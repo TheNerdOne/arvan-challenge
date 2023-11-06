@@ -42,7 +42,7 @@
                     <div
                       class="dropdown-item"
                       role="button"
-                      @click="deleteArticle(item.id)"
+                      @click="deleteArticle(item.slug)"
                     >
                       Delete
                     </div>
@@ -61,8 +61,11 @@
 </template>
 
 <script setup>
+import articlesDataProvider from "../service/services/articles";
+import { useArticlesStore } from "../stores/articles";
 import Pagination from "./Pagination.vue";
 const props = defineProps(["columns", "items"]);
+const articlesStore = useArticlesStore();
 const dateFormatter = (dateString) => {
   let date = new Date(dateString);
   let options = {
@@ -75,8 +78,15 @@ const dateFormatter = (dateString) => {
 const editArticle = (articleId) => {
   console.log(articleId);
 };
-const deleteArticle = (articleId) => {
-  console.log(articleId);
+const deleteArticle = async (slug) => {
+  const res = await articlesDataProvider.deleteArticle(slug);
+  Promise.resolve(res)
+    .then(() => {
+      articlesStore.deleteArticle();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 };
 </script>
 
