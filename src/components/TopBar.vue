@@ -6,7 +6,8 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link" href="#"
-              >User.name <span class="sr-only">(current)</span></a
+              >{{ userStore.user.username }}
+              <span class="sr-only">(current)</span></a
             >
           </li>
         </ul>
@@ -27,8 +28,17 @@
 </template>
 
 <script setup>
-const handleLogOutClick = () => {
-  console.log("logged out");
+import { useRouter } from "vue-router";
+import { cookieFuns } from "../service/cookies";
+import { useUsersStore } from "../stores/users";
+const router = useRouter();
+const cookiesFunctions = new cookieFuns();
+const userStore = useUsersStore();
+const token = cookiesFunctions.getCookie("token");
+const handleLogOutClick = async () => {
+  await userStore.logOut();
+  cookiesFunctions.setCookie({ cname: "token", cvalue: token, exdays: 0 });
+  router.push({ name: "auth" });
 };
 </script>
 

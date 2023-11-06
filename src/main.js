@@ -23,4 +23,11 @@ const pinia = createPinia()
 app.use(router)
 app.use(pinia)
 
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = CookiesFunctions.getCookie("token")
+    if (to.name !== 'auth' && !isAuthenticated) next({ name: 'auth' })
+    else if (to.name === 'auth' && isAuthenticated) next({ name: 'articles' })
+    else next()
+}) 
+
 app.mount('#app')

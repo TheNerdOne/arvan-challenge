@@ -21,7 +21,7 @@
           type="email"
           label="Email"
           input-name="email"
-          @update:model-value="(newValue) => (email.value = newValue)"
+          v-model:inputValue="email"
         />
       </div>
       <div class="mb-3 row">
@@ -29,7 +29,7 @@
           type="password"
           label="Password"
           input-name="password"
-          @update:model-value="(newValue) => (password.value = newValue)"
+          v-model:inputValue="password"
         />
       </div>
       <div class="row mb-3">
@@ -57,13 +57,18 @@
 
 <script setup>
 import { ref } from "vue";
-import authDataProvider from "../service/services/auth";
 import CustomInput from "./common/CustomInput.vue";
-
+import { cookieFuns } from "../service/cookies";
+import { useUsersStore } from "../stores/users";
+import { useRouter } from "vue-router";
+const userStore = useUsersStore();
+const router = useRouter();
 var registerMode = ref(false);
 var username = ref("");
 var email = ref("");
 var password = ref("");
+const cookiesFunctions = new cookieFuns();
+
 const handleRegisterMode = () => {
   registerMode.value = !registerMode.value;
 };
@@ -74,9 +79,10 @@ const handleSubmit = async (e) => {
     email: email.value,
     password: password.value,
   };
-  const res = registerMode.value
-    ? await authDataProvider.register(userLoginData)
-    : await authDataProvider.login(userLoginData);
+  await userStore.setUser(userLoginData)
+  cookiesFunctions.setCookie({cname: "token",cvalue: userStore.user.token,exdays: 1,});
+  router.push({ name: "articles" });
+  
 };
 </script>
 
