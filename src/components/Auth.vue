@@ -21,7 +21,7 @@
           type="email"
           label="Email"
           input-name="email"
-          @update:model-value="(newValue) => (email.value = newValue)"
+          v-model:inputValue="email"
         />
       </div>
       <div class="mb-3 row">
@@ -29,7 +29,7 @@
           type="password"
           label="Password"
           input-name="password"
-          @update:model-value="(newValue) => (password.value = newValue)"
+          v-model:inputValue="password"
         />
       </div>
       <div class="row mb-3">
@@ -57,7 +57,6 @@
 
 <script setup>
 import { ref } from "vue";
-import authDataProvider from "../service/services/auth";
 import CustomInput from "./common/CustomInput.vue";
 
 var registerMode = ref(false);
@@ -74,9 +73,6 @@ const handleSubmit = async (e) => {
     email: email.value,
     password: password.value,
   };
-  const res = registerMode.value
-    ? await authDataProvider.register(userLoginData)
-    : await authDataProvider.login(userLoginData);
 };
 </script>
 
