@@ -58,11 +58,17 @@
 <script setup>
 import { ref } from "vue";
 import CustomInput from "./common/CustomInput.vue";
-
+import { cookieFuns } from "../service/cookies";
+import { useUsersStore } from "../stores/users";
+import { useRouter } from "vue-router";
+const userStore = useUsersStore();
+const router = useRouter();
 var registerMode = ref(false);
 var username = ref("");
 var email = ref("");
 var password = ref("");
+const cookiesFunctions = new cookieFuns();
+
 const handleRegisterMode = () => {
   registerMode.value = !registerMode.value;
 };
@@ -73,6 +79,10 @@ const handleSubmit = async (e) => {
     email: email.value,
     password: password.value,
   };
+  await userStore.setUser(userLoginData)
+  cookiesFunctions.setCookie({cname: "token",cvalue: userStore.user.token,exdays: 1,});
+  router.push({ name: "articles" });
+  
 };
 </script>
 
