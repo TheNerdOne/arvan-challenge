@@ -1,5 +1,3 @@
-const Articles = {
-  list: "/articles",
-};
+const Articles = "/articles";
 
 export default Articles;
