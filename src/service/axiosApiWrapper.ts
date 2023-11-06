@@ -11,6 +11,7 @@ const axiosApiWrapper = {
     axios.defaults.headers.common["Pragma"] = "no-cache";
     axios.defaults.headers.common["Expires"] = "0";
     axios.defaults.headers.common["Accept"] = "text/plain";
+    axios.defaults.headers.common["Authorization"] = `Token ${JWT.getToken()}`;
     axios.interceptors.response.use(
       interceptorFunctions.response.onFullFilled,
       interceptorFunctions.response.onRejected
@@ -26,7 +27,7 @@ const axiosApiWrapper = {
   },
 
   addAuthorizationHeader() {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${JWT.getToken()}`;
+    axios.defaults.headers.common["Authorization"] = `Token ${JWT.getToken()}`;
   },
 
   updateHeader(hName: string, hValue: string) {
