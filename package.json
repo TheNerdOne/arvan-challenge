@@ -15,7 +15,8 @@
     "@types/node": "^20.8.10",
     "typescript": "^5.2.2",
     "axios": "^1.6.0",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "pinia": "^2.1.7"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
