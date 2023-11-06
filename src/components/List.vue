@@ -13,12 +13,14 @@
         <tr v-for="(item, idx) in props.items" :key="item.id">
           <th scope="row">{{ idx + 1 }}</th>
           <td>{{ item.title }}</td>
-          <td>{{ item.author }}</td>
-          <td>{{ item.tags }}</td>
-          <td>{{ item.excrept }}</td>
+          <td>{{ item.author.username }}</td>
+          <td>
+            <span v-for="tag in item.tagList" :key="tag">{{ `${tag} ` }}</span>
+          </td>
+          <td>{{ item.body.split(" ").slice(0, 19).join(" ") }}</td>
           <td>
             <div class="d-flex align-items-center justify-content-start gap-2">
-              <div>{{ item.created }}</div>
+              <div>{{ dateFormatter(item.createdAt) }}</div>
               <div>
                 <div class="dropdown">
                   <button
@@ -59,19 +61,28 @@
 </template>
 
 <script setup>
-    import Pagination from "./Pagination.vue";
-    const props = defineProps(["columns", "items"]);
-    const editArticle = (articleId) => {
-      console.log(articleId);
-    };
-    const deleteArticle = (articleId) => {
-      console.log(articleId);
-    };
-  </script>
+import Pagination from "./Pagination.vue";
+const props = defineProps(["columns", "items"]);
+const dateFormatter = (dateString) => {
+  let date = new Date(dateString);
+  let options = {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  };
+  return date.toLocaleDateString("en-EN", options);
+};
+const editArticle = (articleId) => {
+  console.log(articleId);
+};
+const deleteArticle = (articleId) => {
+  console.log(articleId);
+};
+</script>
 
-  <style lang="scss" scoped>
-    .btn-info {
-      background-color: var(--arv-info) !important;
-      border: none !important;
-    }
-  </style>
+<style lang="scss" scoped>
+.btn-info {
+  background-color: var(--arv-info) !important;
+  border: none !important;
+}
+</style>
