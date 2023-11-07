@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-export const useAlertStore = defineStore('articles', {
+export const useAlertStore = defineStore('alert', {
     state: () => {
         return {
             alertConfig: { type: "success", text: "Lorem!", strongText: "ipsum" },
