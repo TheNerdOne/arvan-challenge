@@ -6,7 +6,7 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link" href="#"
-              >{{ userStore.user.username }}
+              >Welcome {{ userStore.user.username }}
               <span class="sr-only">(current)</span></a
             >
           </li>
