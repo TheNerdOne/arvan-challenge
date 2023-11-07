@@ -1,5 +1,6 @@
 <template>
   <div class="d-flex flex-column align-items-center justify-content-between">
+    <h1 class="text-left d-flex align-self-baseline py-5">All Posts</h1>
     <table class="table">
       <thead>
         <tr class="table-active">
