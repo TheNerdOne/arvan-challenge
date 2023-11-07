@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="d-lg-flex flex-column flex-shrink-0 p-3 bg-light sideBar d-none d-lg-block">
+    <div
+      class="d-lg-flex flex-column flex-shrink-0 p-3 bg-light sideBar d-none d-lg-block"
+    >
       <div
         href="/"
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
@@ -8,7 +10,7 @@
         <h2 class="fs-4">Posts</h2>
       </div>
       <hr />
-      <ul class="nav nav-pills flex-column mb-auto">
+      <ul class="nav nav-pills flex-column mb-auto row">
         <li class="nav-item">
           <RouterLink
             :to="{ name: 'articles' }"
@@ -18,7 +20,7 @@
             All Articles
           </RouterLink>
         </li>
-        <li>
+        <li class="nav-item">
           <RouterLink
             :to="{ name: 'createArticle' }"
             :class="`nav-link link-dark ${!articlesRoute ? 'active' : ''}`"
@@ -46,7 +48,15 @@ const articlesRoute = computed(() => {
 
 <style lang="scss" scoped>
 .sideBar {
+  background-color: var(--arv-water-blue) !important;
   width: 280px;
   height: 100vh;
+  color: #fff;
+  .nav-link {
+    color: #fff !important;
+    .active {
+      background-color: rgba(65, 154, 249, 0.2);
+    }
+  }
 }
 </style>
