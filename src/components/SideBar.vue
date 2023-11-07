@@ -14,7 +14,7 @@
         <li class="nav-item">
           <RouterLink
             :to="{ name: 'articles' }"
-            :class="`nav-link ${articlesRoute ? 'active' : ''}`"
+            :class="`nav-link pl-4 ${articlesRoute ? 'active' : ''}`"
             aria-current="page"
           >
             All Articles
@@ -23,7 +23,7 @@
         <li class="nav-item">
           <RouterLink
             :to="{ name: 'createArticle' }"
-            :class="`nav-link link-dark ${!articlesRoute ? 'active' : ''}`"
+            :class="`nav-link pl-4 link-dark ${!articlesRoute ? 'active' : ''}`"
           >
             New Article
           </RouterLink>
