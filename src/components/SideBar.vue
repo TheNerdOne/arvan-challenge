@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light sideBar">
+    <div class="d-lg-flex flex-column flex-shrink-0 p-3 bg-light sideBar d-none d-lg-block">
       <div
         href="/"
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"

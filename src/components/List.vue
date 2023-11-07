@@ -1,59 +1,62 @@
 <template>
   <div class="d-flex flex-column align-items-center justify-content-between">
-    <table class="table">
-      <thead>
-        <tr class="table-active">
-          <th scope="col">#</th>
-          <th scope="col" v-for="column in props.columns" :key="column">
-            {{ column }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, idx) in props.items" :key="item.id">
-          <th scope="row">{{ idx + 1 }}</th>
-          <td>{{ item.title }}</td>
-          <td>{{ item.author.username }}</td>
-          <td>
-            <span v-for="tag in item.tagList" :key="tag">{{ `${tag} ` }}</span>
-          </td>
-          <td>{{ item.body.split(" ").slice(0, 19).join(" ") }}</td>
-          <td>
-            <div class="d-flex align-items-center justify-content-start gap-2">
-              <div>{{ dateFormatter(item.createdAt) }}</div>
-              <div>
-                <div class="dropdown">
-                  <button
-                    class="btn btn-info dropdown-toggle"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    ...
-                  </button>
-                  <div class="dropdown-menu">
-                    <div
-                      class="dropdown-item"
-                      role="button"
-                      @click="editArticle(item.id)"
+    <h1 class="text-left d-flex align-self-baseline py-5">All Posts</h1>
+    <div class="table-responsive table-responsive-sm table-responsive-md">
+      <table class="table">
+        <thead>
+          <tr class="table-active">
+            <th scope="col">#</th>
+            <th scope="col" v-for="column in props.columns" :key="column">
+              {{ column }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, idx) in props.items" :key="item.id">
+            <th scope="row">{{ idx + 1 }}</th>
+            <td>{{ item.title }}</td>
+            <td>{{ item.author.username }}</td>
+            <td>
+              <span v-for="tag in item.tagList" :key="tag">{{ `${tag} ` }}</span>
+            </td>
+            <td>{{ item.body.split(" ").slice(0, 19).join(" ") }}</td>
+            <td>
+              <div class="d-flex align-items-center justify-content-start gap-2">
+                <div>{{ dateFormatter(item.createdAt) }}</div>
+                <div>
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-info dropdown-toggle"
+                      type="button"
+                      data-toggle="dropdown"
+                      aria-expanded="false"
                     >
-                      Edit
-                    </div>
-                    <div
-                      class="dropdown-item"
-                      role="button"
-                      @click="deleteArticle(item.slug)"
-                    >
-                      Delete
+                      ...
+                    </button>
+                    <div class="dropdown-menu">
+                      <div
+                        class="dropdown-item"
+                        role="button"
+                        @click="editArticle(item.id)"
+                      >
+                        Edit
+                      </div>
+                      <div
+                        class="dropdown-item"
+                        role="button"
+                        @click="deleteArticle(item.slug)"
+                      >
+                        Delete
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="w-100 d-flex align-items-center justify-content-center">
       <Pagination />
     </div>
