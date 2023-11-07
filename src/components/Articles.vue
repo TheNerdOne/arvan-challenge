@@ -3,6 +3,7 @@
     v-if="pageData.articles"
     :columns="['Title', 'Author', 'Tags', 'Excrept', 'Created']"
     :items="pageData.articles"
+    :key="articlesStore.articlesData.articles"
   />
   <Loading v-else />
 </template>

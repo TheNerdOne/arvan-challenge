@@ -17,11 +17,15 @@
             <td>{{ item.title }}</td>
             <td>{{ item.author.username }}</td>
             <td>
-              <span v-for="tag in item.tagList" :key="tag">{{ `${tag} ` }}</span>
+              <span v-for="tag in item.tagList" :key="tag">{{
+                `${tag} `
+              }}</span>
             </td>
             <td>{{ item.body.split(" ").slice(0, 19).join(" ") }}</td>
             <td>
-              <div class="d-flex align-items-center justify-content-start gap-2">
+              <div
+                class="d-flex align-items-center justify-content-start gap-2"
+              >
                 <div>{{ dateFormatter(item.createdAt) }}</div>
                 <div>
                   <div class="dropdown">
@@ -41,13 +45,13 @@
                       >
                         Edit
                       </div>
-                      <div
+                      <a href="#staticBackdrop" role="button" 
                         class="dropdown-item"
-                        role="button"
-                        @click="deleteArticle(item.slug)"
+                        data-toggle="modal"
+                        @click="onDelete(item)"
                       >
                         Delete
-                      </div>
+                    </a>
                     </div>
                   </div>
                 </div>
@@ -60,14 +64,26 @@
     <div class="w-100 d-flex align-items-center justify-content-center">
       <Pagination />
     </div>
+    <Modal
+      title="Delete Article"
+      body="Are you sure to delete Article?"
+      text-submit="Yes"
+      text-close="No"
+      submit-type="danger"
+      close-type="light"
+      @onSubmit="articlesStore.deleteArticle(selectedArticle.slug)"
+    />
   </div>
 </template>
 
 <script setup>
-import articlesDataProvider from "../service/services/articles";
+import { ref } from "vue";
+import Modal from './common/Modal.vue'
 import { useArticlesStore } from "../stores/articles";
 import Pagination from "./Pagination.vue";
 const props = defineProps(["columns", "items"]);
+const confirmDeleteModal = ref(false);
+const selectedArticle = ref(null);
 const articlesStore = useArticlesStore();
 const dateFormatter = (dateString) => {
   let date = new Date(dateString);
@@ -81,15 +97,9 @@ const dateFormatter = (dateString) => {
 const editArticle = (articleId) => {
   console.log(articleId);
 };
-const deleteArticle = async (slug) => {
-  const res = await articlesDataProvider.deleteArticle(slug);
-  Promise.resolve(res)
-    .then(() => {
-      articlesStore.deleteArticle();
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+const onDelete = (article) => {
+  selectedArticle.value = article;
+  confirmDeleteModal.value = true;
 };
 </script>
 
