@@ -45,13 +45,15 @@
                       >
                         Edit
                       </div>
-                      <a href="#staticBackdrop" role="button" 
+                      <a
+                        href="#staticBackdrop"
+                        role="button"
                         class="dropdown-item"
                         data-toggle="modal"
                         @click="onDelete(item)"
                       >
                         Delete
-                    </a>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -62,7 +64,13 @@
       </table>
     </div>
     <div class="w-100 d-flex align-items-center justify-content-center">
-      <Pagination />
+      <Pagination
+        :totalItemsCount="articlesStore.articlesData.articlesCount"
+        activeColor="primary"
+        :itemsPerPage="paginationData.index"
+        :page-number="paginationData.page"
+        @onPageClicked="changedPage"
+      />
     </div>
     <Modal
       title="Delete Article"
@@ -78,15 +86,19 @@
 
 <script setup>
 import { ref } from "vue";
-import Modal from './common/Modal.vue'
+import Modal from "./common/Modal.vue";
 import { useArticlesStore } from "../stores/articles";
 import Pagination from "./Pagination.vue";
 import { useRouter } from "vue-router";
 const props = defineProps(["columns", "items"]);
 const confirmDeleteModal = ref(false);
 const selectedArticle = ref(null);
+const paginationData = ref({ index: 10, page: 1 });
 const articlesStore = useArticlesStore();
-const router = useRouter()
+const router = useRouter();
+const changedPage = (e) => {
+  paginationData.value.page = e;
+};
 const dateFormatter = (dateString) => {
   let date = new Date(dateString);
   let options = {
@@ -97,7 +109,7 @@ const dateFormatter = (dateString) => {
   return date.toLocaleDateString("en-EN", options);
 };
 const editArticle = (articleSlug) => {
-  router.push({name:"editArticle",params:{slug:articleSlug}})
+  router.push({ name: "editArticle", params: { slug: articleSlug } });
 };
 const onDelete = (article) => {
   selectedArticle.value = article;
