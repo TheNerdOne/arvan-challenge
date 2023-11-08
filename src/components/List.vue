@@ -79,7 +79,7 @@
       text-close="No"
       submit-type="danger"
       close-type="light"
-      @onSubmit="articlesStore.deleteArticle(selectedArticle)"
+      @onSubmit="deleteArticle(selectedArticle)"
     />
   </div>
 </template>
@@ -90,11 +90,13 @@ import Modal from "./common/Modal.vue";
 import { useArticlesStore } from "../stores/articles";
 import Pagination from "./Pagination.vue";
 import { useRouter } from "vue-router";
+import { useAlertStore } from "../stores/alert";
 const props = defineProps(["columns", "items"]);
 const confirmDeleteModal = ref(false);
 const selectedArticle = ref(null);
 const paginationData = ref({ index: 10, page: 1 });
 const articlesStore = useArticlesStore();
+const alertStore = useAlertStore();
 const router = useRouter();
 const changedPage = (e) => {
   paginationData.value.page = e;
@@ -115,6 +117,11 @@ const onDelete = (article) => {
   selectedArticle.value = article;
   confirmDeleteModal.value = true;
 };
+const deleteArticle = async (payload) => {
+  await articlesStore.deleteArticle(payload).then(()=>{
+    alertStore.showAlert({ type: "danger", text: "deleted succesfully", strongText: "Article" })
+  })
+}
 </script>
 
 <style lang="scss" scoped>
