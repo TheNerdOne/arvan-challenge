@@ -19,5 +19,11 @@ const articlesDataProvider = {
   async createArticle(newArticle: INewArticlePayload): Promise<AxiosResponse> {
     return axiosApiWrapper["post"](ARTICLES, newArticle);
   },
+  async editArticle(article): Promise<AxiosResponse> {
+    return axiosApiWrapper["put"](`${ARTICLES}/${article.slug}`, {article:{body:article.body}});
+  },
+  async getArticle(slug:string): Promise<AxiosResponse> {
+    return axiosApiWrapper["get"](`${ARTICLES}/${slug}`, {});
+  },
 };
 export default articlesDataProvider;
