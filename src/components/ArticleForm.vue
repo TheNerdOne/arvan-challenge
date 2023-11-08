@@ -1,5 +1,5 @@
 <template>
-  <form class="form-container p-5" @submit.prevent="handleSubmit()">
+  <form class="form-container p-5" @submit.prevent="handleSubmit(article)">
     <div class="row mb-3">
       <div class="col-12">
         <h1 class="text-left authHeader">
@@ -67,6 +67,7 @@ const route = useRoute();
 const router = useRouter();
 const articlesStore = useArticlesStore();
 const alertStore = useAlertStore();
+const article = ref({title:"",description:"",body:"",tagList:[]});
 const editMode = computed(() => {
   return route.name === "editArticle";
 });
@@ -77,13 +78,12 @@ onMounted(async () => {
       await articlesDataProvider.getArticle(route.params.slug)
     ).data.article);
 });
-const article = ref({title:"",description:"",body:"",tagList:[]});
-const handleSubmit = async () => {
+const handleSubmit = async (payload) => {
   editMode.value !== true
     ? await articlesStore.createArticle({ article: article.value }).then(()=>{
       alertStore.showAlert({ type: "success", text: "created succesfully", strongText: "New Article" })
     })
-    : await articlesStore.editArticle(article.value).then(()=>{
+    : await articlesStore.editArticle(payload).then(()=>{
       alertStore.showAlert({ type: "success", text: "updated succesfully", strongText: "Article" })
     })
   router.push({ name: "articles" });
