@@ -41,7 +41,7 @@
                       <div
                         class="dropdown-item"
                         role="button"
-                        @click="editArticle(item.id)"
+                        @click="editArticle(item.slug)"
                       >
                         Edit
                       </div>
@@ -71,7 +71,7 @@
       text-close="No"
       submit-type="danger"
       close-type="light"
-      @onSubmit="articlesStore.deleteArticle(selectedArticle.slug)"
+      @onSubmit="articlesStore.deleteArticle(selectedArticle)"
     />
   </div>
 </template>
@@ -81,10 +81,12 @@ import { ref } from "vue";
 import Modal from './common/Modal.vue'
 import { useArticlesStore } from "../stores/articles";
 import Pagination from "./Pagination.vue";
+import { useRouter } from "vue-router";
 const props = defineProps(["columns", "items"]);
 const confirmDeleteModal = ref(false);
 const selectedArticle = ref(null);
 const articlesStore = useArticlesStore();
+const router = useRouter()
 const dateFormatter = (dateString) => {
   let date = new Date(dateString);
   let options = {
@@ -94,8 +96,8 @@ const dateFormatter = (dateString) => {
   };
   return date.toLocaleDateString("en-EN", options);
 };
-const editArticle = (articleId) => {
-  console.log(articleId);
+const editArticle = (articleSlug) => {
+  router.push({name:"editArticle",params:{slug:articleSlug}})
 };
 const onDelete = (article) => {
   selectedArticle.value = article;

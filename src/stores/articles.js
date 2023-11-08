@@ -1,22 +1,32 @@
 import { defineStore } from 'pinia'
 import articlesDataProvider from '../service/services/articles';
+import tagsDataProvider from '../service/services/tags';
 export const useArticlesStore = defineStore('articles', {
     state: () => {
         return {
-            articlesData: { articles: [], articlesCount: 0 }
+            articlesData: { articles: [], articlesCount: 0 },
+            tags:[]
         }
     },
     actions: {
+        async fetchTags() {
+            await tagsDataProvider.getAllTag().then((res)=>{
+                this.tags = res.data.tags
+            })
+        },
         async fetchArticlesData() {
             await articlesDataProvider.getAllArticles().then((res) => {
                 this.articlesData = res.data
             })
         },
-        async deleteArticle(slug) {
+        async deleteArticle(article) {
             await articlesDataProvider.deleteArticle(slug).then((res) => {
                 let tempArticles = { ...this.articlesData }
-                tempArticles.articles = tempArticles.articles.filter((item) => { item.slug !== slug })
-                tempArticles.articlesCount--
+                const index = tempArticles.articles.indexOf(article);
+                if (index > -1) {
+                    tempArticles.articles.splice(index, 1);
+                }
+                this.articlesData.articlesCount--
                 this.articlesData = tempArticles
             }).catch((e) => { console.log(e) });
 
@@ -30,6 +40,11 @@ export const useArticlesStore = defineStore('articles', {
             }).catch((e) => {
                 console.log(e)
             })
+        },
+        async editArticle(payload) {
+            await articlesDataProvider.editArticle(payload).then((res) => {
+                console.log(res.data)
+            }).catch((e) => console.log(e))
         }
     },
 })

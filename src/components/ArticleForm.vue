@@ -9,33 +9,23 @@
     </div>
     <div class="row mb-3">
       <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
-        <label for="user" class="col-12 col-form-label">Title</label>
-        <div class="col-12 mb-3">
-          <input
-            type="text"
-            required
-            class="form-control"
-            id="title"
-            placeholder="Title"
-            v-model="title"
-          />
-        </div>
-        <label for="description" class="col-12 col-form-label"
-          >Description</label
-        >
-        <div class="col-12 mb-3">
-          <input
-            type="description"
-            class="form-control"
-            id="description"
-            placeholder="Description"
-            v-model="description"
-          />
-        </div>
+        <CustomInput
+          type="text"
+          label="Title"
+          input-name="title"
+          v-model:inputValue="article.title"
+        />
+        <CustomInput
+          type="text"
+          label="Description"
+          input-name="description"
+          v-model:inputValue="article.description"
+        />
+
         <label for="body" class="col-12 col-form-label">Body</label>
         <div class="col-12">
           <textarea
-            v-model="body"
+            v-model="article.body"
             type="body"
             required
             class="form-control"
@@ -49,9 +39,16 @@
       <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
         <label for="user" class="col-12 col-form-label">Tags</label>
         <div class="col-12">
-          <div v-for="(tag,idx) in tags" class="d-flex align-items-center justify-content-start gap-2">
-              <input type="checkbox" :id="`tag${idx}`" @input="tagListHandler(tag,$event)"/>
-              <div>{{tag}}</div>
+          <div
+            v-for="(tag, idx) in articlesStore.tags"
+            class="d-flex align-items-center justify-content-start gap-2"
+          >
+            <input
+              type="checkbox"
+              :id="`tag${idx}`"
+              @input="tagListHandler(tag, $event)"
+            />
+            <div>{{ tag }}</div>
           </div>
         </div>
       </div>
@@ -60,30 +57,37 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useArticlesStore } from "../stores/articles";
+import articlesDataProvider from "../service/services/articles";
+import CustomInput from "./common/CustomInput.vue";
 const route = useRoute();
-const router = useRouter()
-const articlesStore = useArticlesStore()
+const router = useRouter();
+const articlesStore = useArticlesStore();
 const editMode = computed(() => {
-  return route.params.slug;
+  return route.name === "editArticle";
 });
-const title = ref("");
-const description = ref("");
-const body = ref("");
-const tagList = ref([])
-const tags = ref(["1","2","3"])
+onMounted(async () => {
+  await articlesStore.fetchTags();
+  editMode.value &&
+    (article.value = (
+      await articlesDataProvider.getArticle(route.params.slug)
+    ).data.article);
+});
+const article = ref({});
+const tagList = ref([]);
 const handleSubmit = async () => {
-  const payload = {title:title.value,description:description.value,body:body.value,tagList:tagList.value}
-  editMode ? await articlesStore.createArticle({article:payload}) : await editArticle({article:payload})
-  router.push({name:'articles'})
+  editMode !== true
+    ? await articlesStore.createArticle({ article: article.value })
+    : await articlesStore.editArticle(article.value);
+  router.push({ name: "articles" });
 };
-function tagListHandler(tag,e){
-  if(e.target.checked) {
-    tagList.value.push(tag)
+function tagListHandler(tag, e) {
+  if (e.target.checked) {
+    tagList.value.push(tag);
   } else {
-    tagList.value = tagList.value.filter((t)=>t!==tag)
+    tagList.value = tagList.value.filter((t) => t !== tag);
   }
 }
 </script>
