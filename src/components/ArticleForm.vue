@@ -75,8 +75,7 @@ onMounted(async () => {
       await articlesDataProvider.getArticle(route.params.slug)
     ).data.article);
 });
-const article = ref({});
-const tagList = ref([]);
+const article = ref({title:"",description:"",body:"",tagList:[]});
 const handleSubmit = async () => {
   editMode !== true
     ? await articlesStore.createArticle({ article: article.value })
@@ -85,9 +84,9 @@ const handleSubmit = async () => {
 };
 function tagListHandler(tag, e) {
   if (e.target.checked) {
-    tagList.value.push(tag);
+    article.value.tagList.push(tag);
   } else {
-    tagList.value = tagList.value.filter((t) => t !== tag);
+    article.value.tagList = article.value.tagList.filter((t) => t !== tag);
   }
 }
 </script>
