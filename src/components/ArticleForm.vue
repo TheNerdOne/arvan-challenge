@@ -62,9 +62,11 @@ import { useRoute, useRouter } from "vue-router";
 import { useArticlesStore } from "../stores/articles";
 import articlesDataProvider from "../service/services/articles";
 import CustomInput from "./common/CustomInput.vue";
+import { useAlertStore } from "../stores/alert";
 const route = useRoute();
 const router = useRouter();
 const articlesStore = useArticlesStore();
+const alertStore = useAlertStore();
 const editMode = computed(() => {
   return route.name === "editArticle";
 });
@@ -77,9 +79,13 @@ onMounted(async () => {
 });
 const article = ref({title:"",description:"",body:"",tagList:[]});
 const handleSubmit = async () => {
-  editMode !== true
-    ? await articlesStore.createArticle({ article: article.value })
-    : await articlesStore.editArticle(article.value);
+  editMode.value !== true
+    ? await articlesStore.createArticle({ article: article.value }).then(()=>{
+      alertStore.showAlert({ type: "success", text: "created succesfully", strongText: "New Article" })
+    })
+    : await articlesStore.editArticle(article.value).then(()=>{
+      alertStore.showAlert({ type: "success", text: "updated succesfully", strongText: "Article" })
+    })
   router.push({ name: "articles" });
 };
 function tagListHandler(tag, e) {

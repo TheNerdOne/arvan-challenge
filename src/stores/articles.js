@@ -20,7 +20,7 @@ export const useArticlesStore = defineStore('articles', {
             })
         },
         async deleteArticle(article) {
-            await articlesDataProvider.deleteArticle(slug).then((res) => {
+            await articlesDataProvider.deleteArticle(article.slug).then((res) => {
                 let tempArticles = { ...this.articlesData }
                 const index = tempArticles.articles.indexOf(article);
                 if (index > -1) {
