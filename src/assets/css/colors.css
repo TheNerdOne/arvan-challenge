@@ -1,0 +1,20 @@
+:root{
+    --arv-gray-600: #373A3C;
+    --arv-gray-500: #55595C;
+    --arv-gray-400: #777777 ;
+    --arv-gray-300: #818A91 ;
+    --arv-gray-200: #DDDDDD ;
+    --arv-gray-100: #ECEEEF ;
+    --arv-primary: #1C7CD5 ;
+    --arv-secondary: #5CB85C ;
+    --arv-info: #56C0E0 ;
+    --arv-warning: #F0AD4E ;
+    --arv-danger: #D9534F ;
+    --arv-primary-transparent: #dcedf6 ;
+    --arv-secondary-transparent: #E2EED8 ;
+    --arv-warning-transparent: #FCF7E4 ;
+    --arv-danger-transparent: #EFDFDF ;
+    --arv-warm-gray:#707070;
+    --arv-silver:#eceeef;
+    --arv-water-blue:#1c7cd5;
+}
