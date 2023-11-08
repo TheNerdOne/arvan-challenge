@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Alert :config="alertData"/>
+    <Alert :config="AlertStore.alertConfig" :visibility="AlertStore.visibility"/>
     <TopBar>
       <SideBar>
         <slot />
@@ -16,9 +16,6 @@ import SideBar from "../components/SideBar.vue";
 import TopBar from "../components/TopBar.vue";
 import { useAlertStore } from '../stores/alert';
 const AlertStore = useAlertStore()
-const alertData = computed(()=>{
-  return AlertStore
-})
 </script>
 
 <style lang="scss" scoped>

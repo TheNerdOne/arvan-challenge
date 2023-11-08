@@ -1,10 +1,10 @@
 <template>
   <div
-    :class="`alert alert-${config?.type} alert-dismissible fade ${visibility ? 'visibility' : ''}`"
+    :class="`alert alert-${config?.type} alert-dismissible fade ${visibility ? 'show' : ''}`"
     role="alert"
   >
     <strong>{{ config?.strongText }}</strong
-    >{{ config?.text }}
+    > {{ config?.text }}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -12,7 +12,6 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 const props = defineProps(["config","visibility"]);
 </script>
 

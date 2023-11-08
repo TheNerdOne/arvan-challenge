@@ -20,7 +20,7 @@ export const useArticlesStore = defineStore('articles', {
             })
         },
         async deleteArticle(article) {
-            await articlesDataProvider.deleteArticle(slug).then((res) => {
+            await articlesDataProvider.deleteArticle(article.slug).then((res) => {
                 let tempArticles = { ...this.articlesData }
                 const index = tempArticles.articles.indexOf(article);
                 if (index > -1) {
@@ -41,9 +41,15 @@ export const useArticlesStore = defineStore('articles', {
                 console.log(e)
             })
         },
-        async editArticle(payload) {
-            await articlesDataProvider.editArticle(payload).then((res) => {
-                console.log(res.data)
+        async editArticle(article) {
+            await articlesDataProvider.editArticle(article).then((res) => {
+                let tempArticles = { ...this.articlesData }
+                const finded = tempArticles.articles.find((item)=>item.slug===article.slug);
+                const index = tempArticles.articles.indexOf(finded)
+                if (index > -1) {
+                    tempArticles.articles[index] = res.data.article
+                    this.articlesData = tempArticles
+                }
             }).catch((e) => console.log(e))
         }
     },

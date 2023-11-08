@@ -1,5 +1,5 @@
 <template>
-  <form class="form-container p-5" @submit.prevent="handleSubmit()">
+  <form class="form-container p-5" @submit.prevent="handleSubmit(article)">
     <div class="row mb-3">
       <div class="col-12">
         <h1 class="text-left authHeader">
@@ -62,9 +62,12 @@ import { useRoute, useRouter } from "vue-router";
 import { useArticlesStore } from "../stores/articles";
 import articlesDataProvider from "../service/services/articles";
 import CustomInput from "./common/CustomInput.vue";
+import { useAlertStore } from "../stores/alert";
 const route = useRoute();
 const router = useRouter();
 const articlesStore = useArticlesStore();
+const alertStore = useAlertStore();
+const article = ref({title:"",description:"",body:"",tagList:[]});
 const editMode = computed(() => {
   return route.name === "editArticle";
 });
@@ -75,11 +78,14 @@ onMounted(async () => {
       await articlesDataProvider.getArticle(route.params.slug)
     ).data.article);
 });
-const article = ref({title:"",description:"",body:"",tagList:[]});
-const handleSubmit = async () => {
-  editMode !== true
-    ? await articlesStore.createArticle({ article: article.value })
-    : await articlesStore.editArticle(article.value);
+const handleSubmit = async (payload) => {
+  editMode.value !== true
+    ? await articlesStore.createArticle({ article: article.value }).then(()=>{
+      alertStore.showAlert({ type: "success", text: "created succesfully", strongText: "New Article" })
+    })
+    : await articlesStore.editArticle(payload).then(()=>{
+      alertStore.showAlert({ type: "success", text: "updated succesfully", strongText: "Article" })
+    })
   router.push({ name: "articles" });
 };
 function tagListHandler(tag, e) {
