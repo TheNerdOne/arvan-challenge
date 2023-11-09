@@ -5,12 +5,12 @@ export const useArticlesStore = defineStore('articles', {
     state: () => {
         return {
             articlesData: { articles: [], articlesCount: 0 },
-            tags:[]
+            tags: []
         }
     },
     actions: {
         async fetchTags() {
-            await tagsDataProvider.getAllTag().then((res)=>{
+            await tagsDataProvider.getAllTag().then((res) => {
                 this.tags = res.data.tags
             })
         },
@@ -32,25 +32,29 @@ export const useArticlesStore = defineStore('articles', {
 
         },
         async createArticle(payload) {
-            await articlesDataProvider.createArticle(payload).then((res) => {
+            try {
+                const res = await articlesDataProvider.createArticle(payload)
                 let tempArticles = { ...this.articlesData }
                 tempArticles.articles.splice(0, 0, res.data.article)
                 tempArticles.articlesCount++
                 this.articlesData = tempArticles
-            }).catch((e) => {
-                console.log(e)
-            })
+            } catch (error) {
+                return error
+            }
         },
         async editArticle(article) {
-            await articlesDataProvider.editArticle(article).then((res) => {
+            try {
+                const res = await articlesDataProvider.editArticle(article)
                 let tempArticles = { ...this.articlesData }
-                const finded = tempArticles.articles.find((item)=>item.slug===article.slug);
+                const finded = tempArticles.articles.find((item) => item.slug === article.slug);
                 const index = tempArticles.articles.indexOf(finded)
                 if (index > -1) {
                     tempArticles.articles[index] = res.data.article
                     this.articlesData = tempArticles
                 }
-            }).catch((e) => console.log(e))
+            } catch (error) {
+                return error
+            }
         }
     },
 })

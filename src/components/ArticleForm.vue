@@ -72,21 +72,27 @@ const editMode = computed(() => {
   return route.name === "editArticle";
 });
 onMounted(async () => {
-  await articlesStore.fetchTags();
+  !articlesStore.tags.length && await articlesStore.fetchTags();
   editMode.value &&
     (article.value = (
       await articlesDataProvider.getArticle(route.params.slug)
     ).data.article);
 });
+const formResponseHanlder = async (error) => {
+  await alertStore.showAlert({
+    type: `${error === undefined ? "success" : "danger"}`,
+    text: `${
+      error === undefined
+        ? "created succesfully"
+        : Object.entries(error.response.data.errors)
+    }`,
+    strongText: `${error === undefined ? "New Article" : ""}`,
+  });
+  error === undefined && router.push({ name: "articles" });
+};
 const handleSubmit = async (payload) => {
-  editMode.value !== true
-    ? await articlesStore.createArticle({ article: article.value }).then(()=>{
-      alertStore.showAlert({ type: "success", text: "created succesfully", strongText: "New Article" })
-    })
-    : await articlesStore.editArticle(payload).then(()=>{
-      alertStore.showAlert({ type: "success", text: "updated succesfully", strongText: "Article" })
-    })
-  router.push({ name: "articles" });
+  const res = editMode.value !== true ? await articlesStore.createArticle(article.value) : await articlesStore.editArticle(payload);;
+  formResponseHanlder(res);
 };
 function tagListHandler(tag, e) {
   if (e.target.checked) {
@@ -96,5 +102,3 @@ function tagListHandler(tag, e) {
   }
 }
 </script>
-
-<style lang="scss" scoped></style>

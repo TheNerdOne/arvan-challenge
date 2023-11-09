@@ -4,7 +4,6 @@ const httpErrorHandlerProcess = async (err: AxiosError) => {
   const status = err.response?.status;
   const accessToken = JWT.getToken();
   // const refreshToken = JWT.getRefreshToken();
-  JWT.deleteToken(accessToken);
   setTimeout(() => {}, 0);
   switch (status) {
     case 401:
@@ -24,6 +23,7 @@ const httpErrorHandlerProcess = async (err: AxiosError) => {
       // }
       break;
     case 403:
+      JWT.deleteToken(accessToken);
       return false;
       //clear all configs from store & storages
       //push to login page
