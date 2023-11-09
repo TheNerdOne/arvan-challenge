@@ -2,7 +2,7 @@
   <div class="d-flex flex-column align-items-center justify-content-between">
     <h1 class="text-left d-flex align-self-baseline py-5">All Posts</h1>
     <div class="table-responsive table-responsive-sm table-responsive-md">
-      <table class="table">
+      <table class="table" v-if="!loading">
         <thead>
           <tr class="table-active">
             <th scope="col">#</th>
@@ -13,7 +13,9 @@
         </thead>
         <tbody>
           <tr v-for="(item, idx) in props.items" :key="item.id">
-            <th scope="row">{{ idx + 1 }}</th>
+            <th scope="row">
+              {{ (paginationData.offset - 1) * paginationData.limit + idx + 1 }}
+            </th>
             <td>{{ item.title }}</td>
             <td>{{ item.author.username }}</td>
             <td>
@@ -62,13 +64,16 @@
           </tr>
         </tbody>
       </table>
+      <div v-else class="w-100">
+        <Loading />
+      </div>
     </div>
     <div class="w-100 d-flex align-items-center justify-content-center">
       <Pagination
         :totalItemsCount="articlesStore.articlesData.articlesCount"
         activeColor="primary"
-        :itemsPerPage="paginationData.index"
-        :page-number="paginationData.page"
+        :itemsPerPage="paginationData.limit"
+        :page-number="+route.query?.offset || paginationData.offset"
         @onPageClicked="changedPage"
       />
     </div>
@@ -85,21 +90,33 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import Modal from "./common/Modal.vue";
 import { useArticlesStore } from "../stores/articles";
 import Pagination from "./Pagination.vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useAlertStore } from "../stores/alert";
+import Loading from "./common/Loading.vue";
 const props = defineProps(["columns", "items"]);
+const emit = defineEmits(["onPageChange"]);
 const confirmDeleteModal = ref(false);
+const loading = ref(false);
 const selectedArticle = ref(null);
-const paginationData = ref({ index: 10, page: 1 });
+const paginationData = ref({ offset: 1, limit: 10 });
 const articlesStore = useArticlesStore();
 const alertStore = useAlertStore();
 const router = useRouter();
+const route = useRoute();
+onBeforeMount(() => {
+  paginationData.value.offset = route.query?.offset || 1;
+});
 const changedPage = (e) => {
-  paginationData.value.page = e;
+  loading.value = true;
+  paginationData.value.offset = e;
+  emit("onPageChange", paginationData.value);
+  setTimeout(() => {
+    loading.value = false;
+  }, 1000);
 };
 const dateFormatter = (dateString) => {
   let date = new Date(dateString);
@@ -118,15 +135,22 @@ const onDelete = (article) => {
   confirmDeleteModal.value = true;
 };
 const deleteArticle = async (payload) => {
-  await articlesStore.deleteArticle(payload).then(()=>{
-    alertStore.showAlert({ type: "danger", text: "deleted succesfully", strongText: "Article" })
-  })
-}
+  await articlesStore.deleteArticle(payload).then(() => {
+    alertStore.showAlert({
+      type: "danger",
+      text: "deleted succesfully",
+      strongText: "Article",
+    });
+  });
+};
 </script>
 
 <style lang="scss" scoped>
 .btn-info {
   background-color: var(--arv-info) !important;
   border: none !important;
+}
+:deep .loading-container {
+    height: 78vh;
 }
 </style>

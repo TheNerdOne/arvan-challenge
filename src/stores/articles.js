@@ -17,8 +17,8 @@ export const useArticlesStore = defineStore('articles', {
         updateTagList(payload) {
             this.tags.push(payload)
         },
-        async fetchArticlesData() {
-            await articlesDataProvider.getAllArticles().then((res) => {
+        async fetchArticlesData({offset=1,limit=10}) {
+            await articlesDataProvider.getAllArticles({offset,limit}).then((res) => {
                 this.articlesData = res.data
             })
         },

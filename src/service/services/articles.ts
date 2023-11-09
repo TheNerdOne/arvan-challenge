@@ -10,8 +10,12 @@ interface INewArticlePayload {
   };
 }
 const articlesDataProvider = {
-  async getAllArticles(): Promise<AxiosResponse> {
-    return await axiosApiWrapper["get"](ARTICLES, {});
+  async getAllArticles({offset,limit}): Promise<AxiosResponse> {
+    const params = new URLSearchParams({
+    limit: (limit || '10').toString(),
+    offset: (offset || '1').toString(),
+  });
+    return await axiosApiWrapper["get"](`${ARTICLES}?${params}`, {});
   },
   async deleteArticle(payload: string): Promise<AxiosResponse> {
     return await axiosApiWrapper["delete"](ARTICLES, payload, {});
