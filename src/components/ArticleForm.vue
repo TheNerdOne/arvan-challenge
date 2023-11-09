@@ -14,12 +14,14 @@
           label="Title"
           input-name="title"
           v-model:inputValue="article.title"
+          placeholder="title"
         />
         <CustomInput
           type="text"
           label="Description"
           input-name="description"
           v-model:inputValue="article.description"
+          placeholder="description"
         />
 
         <label for="body" class="col-12 col-form-label">Body</label>
@@ -37,16 +39,19 @@
         </div>
       </div>
       <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-        <label for="user" class="col-12 col-form-label">Tags</label>
+        <form @submit.prevent="handleCustomTag()">
+          <CustomInput placeholder="New tag" input-name="tags" label="Tags" v-model:inputValue="customTag"/>
+        </form>
         <div class="col-12">
           <div
-            v-for="(tag, idx) in articlesStore.tags"
-            class="d-flex align-items-center justify-content-start gap-2"
+          v-for="(tag, idx) in articlesStore.tags"
+          class="d-flex align-items-center justify-content-start gap-2"
           >
             <input
               type="checkbox"
               :id="`tag${idx}`"
               @input="tagListHandler(tag, $event)"
+              ref="tagCheckBox"
             />
             <div>{{ tag }}</div>
           </div>
@@ -68,6 +73,8 @@ const router = useRouter();
 const articlesStore = useArticlesStore();
 const alertStore = useAlertStore();
 const article = ref({title:"",description:"",body:"",tagList:[]});
+const customTag = ref("");
+const tagCheckBox = ref(null)
 const editMode = computed(() => {
   return route.name === "editArticle";
 });
@@ -78,6 +85,16 @@ onMounted(async () => {
       await articlesDataProvider.getArticle(route.params.slug)
     ).data.article);
 });
+const handleCustomTag = () => {
+  if(customTag.value.length){
+    article.value.tagList.push(customTag.value)
+    articlesStore.updateTagList(customTag.value)
+    setTimeout(() => {
+      tagCheckBox.value[tagCheckBox.value.length-1].checked = true
+    }, 0);
+  }
+  customTag.value = ""
+}
 const formResponseHanlder = async (error) => {
   await alertStore.showAlert({
     type: `${error === undefined ? "success" : "danger"}`,
@@ -91,7 +108,7 @@ const formResponseHanlder = async (error) => {
   error === undefined && router.push({ name: "articles" });
 };
 const handleSubmit = async (payload) => {
-  const res = editMode.value !== true ? await articlesStore.createArticle(article.value) : await articlesStore.editArticle(payload);;
+  const res = editMode.value !== true ? await articlesStore.createArticle({article:article.value}) : await articlesStore.editArticle(payload);;
   formResponseHanlder(res);
 };
 function tagListHandler(tag, e) {

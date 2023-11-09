@@ -14,6 +14,9 @@ export const useArticlesStore = defineStore('articles', {
                 this.tags = res.data.tags
             })
         },
+        updateTagList(payload) {
+            this.tags.push(payload)
+        },
         async fetchArticlesData() {
             await articlesDataProvider.getAllArticles().then((res) => {
                 this.articlesData = res.data
