@@ -55,6 +55,7 @@ const activePage = ref(1);
 const itemsToShow = ref(11);
 onMounted(() => {
   calculatePageCount();
+  activePage.value = props.pageNumber || 1
 });
 const prevPagesArray = computed(() => {
   let arr = [];

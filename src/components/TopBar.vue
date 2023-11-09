@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <nav class="navbar navbar-expand navbar-dark bg-dark w-100 position-fixed">
       <a class="navbar-brand" href="#">Arvan challenge</a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">

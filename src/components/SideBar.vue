@@ -30,7 +30,7 @@
         </li>
       </ul>
     </div>
-    <div class="w-100">
+    <div class="w-100 position-relative" style="top:56px">
       <slot />
     </div>
   </div>
@@ -49,9 +49,11 @@ const articlesRoute = computed(() => {
 <style lang="scss" scoped>
 .sideBar {
   background-color: var(--arv-water-blue) !important;
-  width: 280px;
-  height: 100vh;
-  color: #fff;
+    width: 280px;
+    height: calc(100vh - 56px);
+    color: #fff;
+    position: relative;
+    top: 56px;
   .nav-link {
     color: #fff !important;
     .active {
