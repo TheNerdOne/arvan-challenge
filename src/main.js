@@ -25,11 +25,11 @@ app.use(pinia)
 
 router.beforeEach((to, from, next) => {
     const userStore = useUsersStore();
-    const isAuthenticated = JWT.getToken()
+    const isAuthenticated = Boolean(JWT.getToken())
     if (!userStore.user.token && isAuthenticated) userStore.getUser()
-    if (to.name !== 'auth' && !isAuthenticated) next({ name: 'auth' })
-    else if (to.name === 'auth' && isAuthenticated) next({ name: 'articles' })
-    else next()
+    if (!isAuthenticated && to.name !== 'auth') {
+        next({ name: 'auth' })
+    } else next()
 })
 
 app.mount('#app')

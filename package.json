@@ -1,7 +1,7 @@
 {
   "name": "arvan-ch",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,14 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.4",
+    "@types/node": "^20.8.10",
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
+    "axios": "^1.6.0",
     "bootstrap": "4.6",
     "node-sass": "^9.0.0",
-    "@types/node": "^20.8.10",
+    "pinia": "^2.1.7",
     "typescript": "^5.2.2",
-    "axios": "^1.6.0",
-    "vue-router": "^4.2.5",
-    "pinia": "^2.1.7"
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
