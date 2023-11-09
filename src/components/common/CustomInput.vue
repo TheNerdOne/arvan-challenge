@@ -7,12 +7,13 @@
       :id="inputName"
       :value="inputValue"
       @input="$emit('update:inputValue', $event.target.value)"
+      :placeholder="placeholder"
     />
   </div>
 </template>
 
 <script setup>
-const props = defineProps(["type", "inputName", "label", "inputValue"]);
+const props = defineProps(["type", "inputName", "label", "inputValue","placeholder"]);
 </script>
 
 <style lang="scss" scoped></style>
