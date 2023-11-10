@@ -13,7 +13,7 @@ const articlesDataProvider = {
   async getAllArticles({offset,limit}): Promise<AxiosResponse> {
     const params = new URLSearchParams({
     limit: (limit || '10').toString(),
-    offset: (offset || '1').toString(),
+    offset: (offset || '0').toString(),
   });
     return await axiosApiWrapper["get"](`${ARTICLES}?${params}`, {});
   },
