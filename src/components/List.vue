@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-items-center justify-content-between">
+  <div class="d-flex flex-column align-items-center justify-content-between articleContainer">
     <h1 class="text-left d-flex align-self-baseline py-5">All Posts</h1>
     <div class="table-responsive table-responsive-sm table-responsive-md">
       <table class="table" v-if="!loading">
@@ -146,6 +146,9 @@ const deleteArticle = async (payload) => {
 </script>
 
 <style lang="scss" scoped>
+.articleContainer {
+  height: calc(100vh - 56px);
+}
 .btn-info {
   background-color: var(--arv-info) !important;
   border: none !important;
