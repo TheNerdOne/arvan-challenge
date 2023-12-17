@@ -1,5 +1,6 @@
 <template>
   <div class="container d-flex align-items-center justify-content-center">
+    <Alert :config="alertStore.alertConfig" :visibility="alertStore.visibility"/>
     <form class="form-container p-5" @submit.prevent="handleSubmit()">
       <div class="row mb-3">
         <div class="col-12">
@@ -71,6 +72,8 @@ import CustomInput from "./common/CustomInput.vue";
 import { cookieFuns } from "../service/cookies";
 import { useUsersStore } from "../stores/users";
 import { useRouter } from "vue-router";
+import { useAlertStore } from "../stores/alert";
+import Alert from '../components/common/Alert.vue';
 
 const userStore = useUsersStore();
 const router = useRouter();
@@ -78,7 +81,10 @@ const registerMode = ref(false);
 const username = ref("");
 const email = ref("");
 const password = ref("");
+const loading = ref(false);
+//use for button loading and disable mode
 const cookiesFunctions = new cookieFuns();
+const alertStore = useAlertStore()
 
 const rules = computed(() => ({
   email: {
@@ -108,7 +114,16 @@ const handleSubmit = async () => {
     email: email.value,
     password: password.value,
   };
-  await userStore.setUser(userLoginData, registerMode.value);
+  const res = await userStore.setUser(userLoginData, registerMode.value);
+  await alertStore.showAlert({
+    type: `${res === undefined ? "success" : "danger"}`,
+    text: `${
+      res === undefined
+        ? "Logged in successfully!"
+        : Object.entries(res.response.data.errors)[0].join(":")
+    }`,
+    strongText: `${res === undefined ? "New Article" : ""}`,
+  });
   cookiesFunctions.setCookie({
     cname: "token",
     cvalue: userStore.user.token,
