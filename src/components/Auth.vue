@@ -43,9 +43,9 @@
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <button class="btn btn-primary btn-block">
+          <Button :loading="loading" class-size="block" class-type="primary">
             {{ registerMode ? "Register" : "Login" }}
-          </button>
+          </Button>
         </div>
       </div>
       <div class="row mb-3">
@@ -69,6 +69,7 @@ import { ref, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 import CustomInput from "./common/CustomInput.vue";
+import Button from './common/Button.vue'
 import { cookieFuns } from "../service/cookies";
 import { useUsersStore } from "../stores/users";
 import { useRouter } from "vue-router";
@@ -81,7 +82,7 @@ const registerMode = ref(false);
 const username = ref("");
 const email = ref("");
 const password = ref("");
-const loading = ref(false);
+let loading = ref(false);
 //use for button loading and disable mode
 const cookiesFunctions = new cookieFuns();
 const alertStore = useAlertStore()
@@ -105,8 +106,11 @@ const handleRegisterMode = () => {
   registerMode.value = !registerMode.value;
 };
 const handleSubmit = async () => {
+  loading.value = true
   const result = await v$.value.$validate();
   if (!result) {
+    loading.value = false
+    console.log(loading.value)
     return;
   }
   const userLoginData = {
@@ -129,6 +133,7 @@ const handleSubmit = async () => {
     cvalue: userStore.user.token,
     exdays: 1,
   });
+  loading.value = false
   router.push({ name: "articles" });
 };
 </script>
