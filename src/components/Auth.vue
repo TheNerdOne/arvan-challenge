@@ -1,5 +1,6 @@
 <template>
   <div class="container d-flex align-items-center justify-content-center">
+    <Alert :config="alertStore.alertConfig" :visibility="alertStore.visibility"/>
     <form class="form-container p-5" @submit.prevent="handleSubmit()">
       <div class="row mb-3">
         <div class="col-12">
@@ -42,9 +43,9 @@
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <button class="btn btn-primary btn-block">
+          <Button :loading="loading" class-size="block" class-type="primary">
             {{ registerMode ? "Register" : "Login" }}
-          </button>
+          </Button>
         </div>
       </div>
       <div class="row mb-3">
@@ -68,9 +69,12 @@ import { ref, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 import CustomInput from "./common/CustomInput.vue";
+import Button from './common/Button.vue'
 import { cookieFuns } from "../service/cookies";
 import { useUsersStore } from "../stores/users";
 import { useRouter } from "vue-router";
+import { useAlertStore } from "../stores/alert";
+import Alert from '../components/common/Alert.vue';
 
 const userStore = useUsersStore();
 const router = useRouter();
@@ -78,7 +82,10 @@ const registerMode = ref(false);
 const username = ref("");
 const email = ref("");
 const password = ref("");
+let loading = ref(false);
+//use for button loading and disable mode
 const cookiesFunctions = new cookieFuns();
+const alertStore = useAlertStore()
 
 const rules = computed(() => ({
   email: {
@@ -99,8 +106,11 @@ const handleRegisterMode = () => {
   registerMode.value = !registerMode.value;
 };
 const handleSubmit = async () => {
+  loading.value = true
   const result = await v$.value.$validate();
   if (!result) {
+    loading.value = false
+    console.log(loading.value)
     return;
   }
   const userLoginData = {
@@ -108,12 +118,22 @@ const handleSubmit = async () => {
     email: email.value,
     password: password.value,
   };
-  await userStore.setUser(userLoginData, registerMode.value);
+  const res = await userStore.setUser(userLoginData, registerMode.value);
+  await alertStore.showAlert({
+    type: `${res === undefined ? "success" : "danger"}`,
+    text: `${
+      res === undefined
+        ? "Logged in successfully!"
+        : Object.entries(res.response.data.errors)[0].join(":")
+    }`,
+    strongText: `${res === undefined ? "New Article" : ""}`,
+  });
   cookiesFunctions.setCookie({
     cname: "token",
     cvalue: userStore.user.token,
     exdays: 1,
   });
+  loading.value = false
   router.push({ name: "articles" });
 };
 </script>
