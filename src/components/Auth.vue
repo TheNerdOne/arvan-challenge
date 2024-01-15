@@ -12,7 +12,7 @@
       <div class="mb-3 row" v-if="registerMode">
         <CustomInput
           type="text"
-          label="User"
+          label="user"
           input-name="user"
           v-model:inputValue="username"
           :valid="!v$.username.$errors.length"
@@ -22,6 +22,7 @@
       </div>
       <div class="mb-3 row">
         <CustomInput
+          type="text"
           label="Email"
           input-name="email"
           v-model:inputValue="email"
@@ -94,9 +95,10 @@ const rules = computed(() => ({
   password: {
     required: helpers.withMessage("Required field!", required),
   },
-  username: {
-    required: registerMode.value && helpers.withMessage("Required field!", required),
-  },
+  ...(registerMode.value && {username: {
+    required: helpers.withMessage("Required field!", required),
+  }})
+  
 }));
 const v$ = useVuelidate(
   rules,
@@ -110,7 +112,6 @@ const handleSubmit = async () => {
   const result = await v$.value.$validate();
   if (!result) {
     loading.value = false
-    console.log(loading.value)
     return;
   }
   const userLoginData = {

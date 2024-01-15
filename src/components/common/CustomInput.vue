@@ -10,6 +10,7 @@
       @blur="$emit('blur')"
       :placeholder="placeholder"
       :required="required"
+      :disabled="disabled"
     />
     <div
       v-if="!valid"
@@ -33,6 +34,7 @@ const props = defineProps([
   "required",
   "valid",
   "errText",
+  "disabled"
 ]);
 </script>
 
