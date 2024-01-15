@@ -13,27 +13,29 @@
           type="text"
           label="Title"
           input-name="title"
-          v-model:inputValue="article.title"
+          v-model:inputValue="title"
           placeholder="title"
           :valid="!v$.title.$errors.length"
           :err-text="v$.title.$errors"
           @blur="v$.title.$touch"
-        />
-        <CustomInput
+          :disabled="editMode"
+          />
+          <CustomInput
           type="text"
           label="Description"
           input-name="description"
-          v-model:inputValue="article.description"
+          v-model:inputValue="description"
           placeholder="description"
           :valid="!v$.description.$errors.length"
           :err-text="v$.description.$errors"
           @blur="v$.description.$touch"
+          :disabled="editMode"
         />
 
         <label for="body" class="col-12 col-form-label">Body</label>
         <div class="col-12">
           <textarea
-            v-model="article.body"
+            v-model="body"
             type="body"
             required
             :class="`form-control ${v$.body.$errors.length ? 'is-invalid' : ''}`"
@@ -47,7 +49,7 @@
           </template>
         </div>
         <div class="col">
-          <button class="btn btn-primary my-3" type="button" @click="handleSubmit(article)">Submit</button>
+          <button class="btn btn-primary my-3" type="button" @click="handleSubmit({title,description,body,tagList})">Submit</button>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
@@ -70,6 +72,7 @@
               :id="`tag${idx}`"
               @input="tagListHandler(tag, $event)"
               ref="tagCheckBox"
+              :checked="tagList.includes(tag)"
             />
             <div>{{ tag }}</div>
           </div>
@@ -92,7 +95,11 @@ const route = useRoute();
 const router = useRouter();
 const articlesStore = useArticlesStore();
 const alertStore = useAlertStore();
-const article = ref({title:"",description:"",body:"",tagList:[]});
+const articleValue = ref(null)
+const title = ref("")
+const description = ref("")
+const body = ref("")
+const tagList = ref([])
 const customTag = ref("");
 const tagCheckBox = ref(null)
 const editMode = computed(() => {
@@ -109,17 +116,21 @@ const rules = computed(() => ({
     required:helpers.withMessage('Required field!', required),
   },
 }));
-const v$ = useVuelidate(rules,{title:article.value.title,description:article.value.description,body:article.value.body} );
+const v$ = useVuelidate(rules,{title,description,body} );
 onMounted(async () => {
   !articlesStore.tags.length && await articlesStore.fetchTags();
   editMode.value &&
-    (article.value = (
+    (articleValue.value = (
       await articlesDataProvider.getArticle(route.params.slug)
     ).data.article);
+    title.value = articleValue.value.title
+    description.value = articleValue.value.description
+    body.value = articleValue.value.body
+    tagList.value = articleValue.value.tagList
 });
 const handleCustomTag = () => {
   if(customTag.value.length){
-    article.value.tagList.push(customTag.value)
+    tagList.value.push(customTag.value)
     articlesStore.updateTagList(customTag.value)
     setTimeout(() => {
       tagCheckBox.value[tagCheckBox.value.length-1].checked = true
@@ -144,14 +155,14 @@ const handleSubmit = async (payload) => {
   if (!result) {
     return;
   }
-  const res = editMode.value !== true ? await articlesStore.createArticle({article:article.value}) : await articlesStore.editArticle(payload);;
+  const res = editMode.value !== true ? await articlesStore.createArticle({article:{title:title.value,description:description.value,body:body.value,tagList:tagList.value}}) : await articlesStore.editArticle({...articleValue.value,...payload});;
   formResponseHanlder(res);
 };
 function tagListHandler(tag, e) {
   if (e.target.checked) {
-    article.value.tagList.push(tag);
+    tagList.value.push(tag);
   } else {
-    article.value.tagList = article.value.tagList.filter((t) => t !== tag);
+    tagList.value = tagList.value.filter((t) => t !== tag);
   }
 }
 </script>
