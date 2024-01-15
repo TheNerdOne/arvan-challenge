@@ -24,7 +24,7 @@ const articlesDataProvider = {
     return axiosApiWrapper["post"](ARTICLES, newArticle);
   },
   async editArticle(article): Promise<AxiosResponse> {
-    return axiosApiWrapper["put"](`${ARTICLES}/${article.slug}`, {article:{body:article.body}});
+    return axiosApiWrapper["put"](`${ARTICLES}/${article.slug}`, {article});
   },
   async getArticle(slug:string): Promise<AxiosResponse> {
     return axiosApiWrapper["get"](`${ARTICLES}/${slug}`, {});
