@@ -1,6 +1,9 @@
 <template>
   <div class="container d-flex align-items-center justify-content-center">
-    <Alert :config="alertStore.alertConfig" :visibility="alertStore.visibility"/>
+    <Alert
+      :config="alertStore.alertConfig"
+      :visibility="alertStore.visibility"
+    />
     <form class="form-container p-5" @submit.prevent="handleSubmit()">
       <div class="row mb-3">
         <div class="col-12">
@@ -44,7 +47,7 @@
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <Button :loading="loading" class-size="block" class-type="primary">
+          <Button :disabled="v$.$errors.length" :loading="loading" class-size="block" class-type="primary">
             {{ registerMode ? "Register" : "Login" }}
           </Button>
         </div>
@@ -68,14 +71,14 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
+import { required, helpers, maxLength, minLength } from "@vuelidate/validators";
 import CustomInput from "./common/CustomInput.vue";
-import Button from './common/Button.vue'
+import Button from "./common/Button.vue";
 import { cookieFuns } from "../service/cookies";
 import { useUsersStore } from "../stores/users";
 import { useRouter } from "vue-router";
 import { useAlertStore } from "../stores/alert";
-import Alert from '../components/common/Alert.vue';
+import Alert from "../components/common/Alert.vue";
 
 const userStore = useUsersStore();
 const router = useRouter();
@@ -86,7 +89,7 @@ const password = ref("");
 let loading = ref(false);
 //use for button loading and disable mode
 const cookiesFunctions = new cookieFuns();
-const alertStore = useAlertStore()
+const alertStore = useAlertStore();
 
 const rules = computed(() => ({
   email: {
@@ -97,21 +100,30 @@ const rules = computed(() => ({
   },
   ...(registerMode.value && {username: {
     required: helpers.withMessage("Required field!", required),
-  }})
-  
+    minLength: helpers.withMessage(
+      ({ $pending, $invalid, $params, $model }) =>
+        `Min value length is ${$params.min} characters!`,
+      minLength(3)
+    ),
+    maxLength: helpers.withMessage(
+      ({ $pending, $invalid, $params, $model }) =>
+        `Max value length is ${$params.max} characters!`,
+      maxLength(10)
+    ),
+  },})
 }));
 const v$ = useVuelidate(
   rules,
-  registerMode.value ? { email, password, username } : { email, password }
+  { email, password, username }
 );
 const handleRegisterMode = () => {
   registerMode.value = !registerMode.value;
 };
 const handleSubmit = async () => {
-  loading.value = true
+  loading.value = true;
   const result = await v$.value.$validate();
   if (!result) {
-    loading.value = false
+    loading.value = false;
     return;
   }
   const userLoginData = {
@@ -134,7 +146,7 @@ const handleSubmit = async () => {
     cvalue: userStore.user.token,
     exdays: 1,
   });
-  loading.value = false
+  loading.value = false;
   router.push({ name: "articles" });
 };
 </script>
